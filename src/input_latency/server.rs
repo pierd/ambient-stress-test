@@ -45,9 +45,9 @@ pub fn main() {
                 // check if there was a gap in the sequence numbers
                 let prev_seq_num = seq_nums[prev_idx];
                 if msg.seq_num < prev_seq_num {
-                    eprint!("Out of order messages!");
+                    eprintln!("Out of order messages!");
                 } else if msg.seq_num == prev_seq_num {
-                    eprint!("Duplicate message!");
+                    eprintln!("Duplicate message!");
                 } else if prev_seq_num != 0 && msg.seq_num != 0 {
                     assert!(msg.seq_num > prev_seq_num); // this should be guaranteed by the previous checks
                     seq_gap = (msg.seq_num - prev_seq_num) - 1;
