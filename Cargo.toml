@@ -1,0 +1,23 @@
+[package]
+name = "ambient_stress_test"
+
+edition = "2021"
+publish = false
+version = "0.0.1"
+
+[dependencies]
+ambient_api = { git = "https://github.com/AmbientRun/Ambient.git", rev = "8ce8718f74" }
+
+[[bin]]
+name = "input_latency_client"
+path = "src/input_latency/client.rs"
+required-features = ["client"]
+
+[[bin]]
+name = "input_latency_server"
+path = "src/input_latency/server.rs"
+required-features = ["server"]
+
+[features]
+client = ["ambient_api/client"]
+server = ["ambient_api/server"]

@@ -1,0 +1,8 @@
+[ember]
+id = "ambient_stress_test"
+name = "stress_test"
+version = "0.0.1"
+
+includes = [
+    "src/input_latency/ambient.toml",
+]

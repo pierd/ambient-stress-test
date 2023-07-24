@@ -1,0 +1,7 @@
+[components]
+player_input_last_idx = { type = "U64", description = "Last idx used for storing input", attributes = ["Debuggable", "Networked"] }
+player_input_seq_nums = { type = { type = "Vec", element_type = "U64" }, description = "Sequence numbers of last input messages", attributes = ["Debuggable", "Networked"] }
+player_input_seq_skip = { type = "U64", description = "Sum of sequence numbers gaps", attributes = ["Debuggable", "Networked"] }
+
+[messages.input.fields]
+seq_num = { type = "U64", description = "Sequence number of the message" }
