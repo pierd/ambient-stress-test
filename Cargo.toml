@@ -6,7 +6,7 @@ publish = false
 version = "0.0.1"
 
 [dependencies]
-ambient_api = { git = "https://github.com/AmbientRun/Ambient.git", rev = "8ce8718f74" }
+ambient_api = { git = "https://github.com/AmbientRun/Ambient.git", rev = "0fb88c38dfa78deb0fb3b78669d72f1f73b8ba35" }
 
 [[bin]]
 name = "input_latency_client"
