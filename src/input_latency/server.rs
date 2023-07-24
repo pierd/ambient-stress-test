@@ -21,8 +21,6 @@ pub fn main() {
     });
 
     messages::Input::subscribe(move |source, msg| {
-        println!("Received input message: {:?}", msg);
-
         let Some(player_entity_id) = source.client_entity_id() else {
             eprintln!("Received input message from unknown client");
             return;

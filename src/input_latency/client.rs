@@ -111,7 +111,7 @@ pub fn main() {
             sent_timestamps.len() + responded_pings_count
         );
         println!(
-            "Sequence gap sum: {}",
+            "Sequence gap sum (from server): {}",
             get_component(player_id, components::player_input_seq_skip()).unwrap_or(0)
         );
         println!("Current sequence gap: {}", seq_num - last_seq_num_seen);
