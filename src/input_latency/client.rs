@@ -65,6 +65,7 @@ pub fn main() {
     let mut latencies = HashMap::<u64, usize>::new();
     let mut average_latency = RollingAverageBuffer::<ROLLING_AVERAGE_BUFFER_SIZE, u64>::default();
     let mut last_seq_num_seen = 0;
+    let mut last_timestamp_seen = 0;
     let mut frame_count = 0;
 
     ambient_api::messages::Frame::subscribe(move |_| {
@@ -84,8 +85,11 @@ pub fn main() {
                     let latency = timestamp - sent_timestamp;
                     *latencies.entry(latency).or_default() += 1;
                     average_latency.add(latency);
-                    if seq_num > last_seq_num_seen {
+                    if last_seq_num_seen < seq_num {
                         last_seq_num_seen = seq_num;
+                    }
+                    if last_timestamp_seen < sent_timestamp {
+                        last_timestamp_seen = sent_timestamp;
                     }
                 }
             }
@@ -115,5 +119,9 @@ pub fn main() {
             get_component(player_id, components::player_input_seq_skip()).unwrap_or(0)
         );
         println!("Current sequence gap: {}", seq_num - last_seq_num_seen);
+        println!(
+            "Current world latency: {}ms",
+            timestamp - last_timestamp_seen
+        );
     });
 }
