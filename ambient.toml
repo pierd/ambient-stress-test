@@ -1,6 +1,6 @@
 [ember]
 id = "ambient_stress_test"
-name = "stress_test"
+name = "Stress test"
 version = "0.0.1"
 
 includes = [
