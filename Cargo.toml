@@ -18,6 +18,16 @@ name = "input_latency_server"
 path = "src/input_latency/server.rs"
 required-features = ["server"]
 
+[[bin]]
+name = "world_latency_client"
+path = "src/world_latency/client.rs"
+required-features = ["client"]
+
+[[bin]]
+name = "world_latency_server"
+path = "src/world_latency/server.rs"
+required-features = ["server"]
+
 [features]
 client = ["ambient_api/client"]
 server = ["ambient_api/server"]

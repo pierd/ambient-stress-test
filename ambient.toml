@@ -5,4 +5,5 @@ version = "0.0.1"
 
 includes = [
     "src/input_latency/ambient.toml",
+    "src/world_latency/ambient.toml",
 ]
