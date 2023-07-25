@@ -59,6 +59,7 @@ where
 #[main]
 pub fn main() {
     let player_id = player::get_local();
+    let start_time = local_now();
 
     let mut seq_num = 1;
     let mut sent_timestamps = HashMap::new();
@@ -122,6 +123,10 @@ pub fn main() {
         println!(
             "Current world latency: {}ms",
             timestamp - last_timestamp_seen
+        );
+        println!(
+            "Average FPS: {}",
+            frame_count as f64 / (timestamp - start_time) as f64 * 1000.0
         );
     });
 }
