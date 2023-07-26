@@ -5,6 +5,7 @@ use ambient_api::{entity::get_component, message::Target, prelude::*};
 const TARGET: Target = Target::ServerUnreliable;
 const FRAMES_PER_MESSAGE: usize = 1; // send message every X frames
 const ROLLING_AVERAGE_BUFFER_SIZE: usize = 60;
+const PRINT_FREQUENCY_MILLIS: u64 = 1000;
 
 fn local_now() -> u64 {
     epoch_time().as_millis() as u64
@@ -68,6 +69,7 @@ pub fn main() {
     let mut last_seq_num_seen = 0;
     let mut last_timestamp_seen = 0;
     let mut frame_count = 0;
+    let mut last_print_time = 0;
 
     ambient_api::messages::Frame::subscribe(move |_| {
         frame_count += 1;
@@ -96,37 +98,40 @@ pub fn main() {
             }
         }
 
-        let responded_pings_count: usize = latencies.iter().map(|(_, count)| count).sum();
-        if responded_pings_count > 0 {
-            let average_rtt = latencies
-                .iter()
-                .map(|(latency, count)| *latency as usize * *count)
-                .sum::<usize>()
-                / responded_pings_count;
-            println!("Average RTT: {}ms", average_rtt);
+        if last_print_time + PRINT_FREQUENCY_MILLIS < timestamp {
+            let responded_pings_count: usize = latencies.iter().map(|(_, count)| count).sum();
+            if responded_pings_count > 0 {
+                let average_rtt = latencies
+                    .iter()
+                    .map(|(latency, count)| *latency as usize * *count)
+                    .sum::<usize>()
+                    / responded_pings_count;
+                println!("Average RTT: {}ms", average_rtt);
+            }
+            println!(
+                "Last {} messages average RTT: {}ms",
+                ROLLING_AVERAGE_BUFFER_SIZE,
+                average_latency.average()
+            );
+            println!(
+                "Missing: {}/{}",
+                sent_timestamps.len(),
+                sent_timestamps.len() + responded_pings_count
+            );
+            println!(
+                "Sequence gap sum (from server): {}",
+                get_component(player_id, components::player_input_seq_skip()).unwrap_or(0)
+            );
+            println!("Current sequence gap: {}", seq_num - last_seq_num_seen);
+            println!(
+                "Current world latency: {}ms",
+                timestamp - last_timestamp_seen
+            );
+            println!(
+                "Average FPS: {}",
+                frame_count as f64 / (timestamp - start_time) as f64 * 1000.0
+            );
+            last_print_time = timestamp;
         }
-        println!(
-            "Last {} messages average RTT: {}ms",
-            ROLLING_AVERAGE_BUFFER_SIZE,
-            average_latency.average()
-        );
-        println!(
-            "Missing: {}/{}",
-            sent_timestamps.len(),
-            sent_timestamps.len() + responded_pings_count
-        );
-        println!(
-            "Sequence gap sum (from server): {}",
-            get_component(player_id, components::player_input_seq_skip()).unwrap_or(0)
-        );
-        println!("Current sequence gap: {}", seq_num - last_seq_num_seen);
-        println!(
-            "Current world latency: {}ms",
-            timestamp - last_timestamp_seen
-        );
-        println!(
-            "Average FPS: {}",
-            frame_count as f64 / (timestamp - start_time) as f64 * 1000.0
-        );
     });
 }
